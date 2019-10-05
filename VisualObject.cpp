@@ -1,0 +1,1 @@
+#include "VisualObject.h"

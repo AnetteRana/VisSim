@@ -1,0 +1,17 @@
+#ifndef RMATH_H
+#define RMATH_H
+
+#include <QOpenGLFunctions_4_1_Core>
+#include <cmath>
+#include <QDebug>
+
+namespace GSmath
+{
+
+//GLfloat mPI{3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679};
+
+
+}
+
+
+#endif // RMATH_H
