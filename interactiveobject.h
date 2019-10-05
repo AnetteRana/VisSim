@@ -3,12 +3,21 @@
 
 #include "OctahedronBall.h"
 
+class TriangleSurface;
+
 class InteractiveObject : public OctahedronBall
 {
 public:
     InteractiveObject(int n);
 
-    void interactiveMove(GLfloat x = .0f, GLfloat y = .0f, GLfloat z = .0f);
+    void move();
+
+    TriangleSurface* mGround{nullptr};
+
+    Vector3d startPos{0,0,0};
+
+    void reset();
+
     //void draw() override;
 };
 

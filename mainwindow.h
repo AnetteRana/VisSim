@@ -21,8 +21,9 @@ public:
 private slots:
     void on_actiondoor_triggered();
     void on_actionwireframe_triggered();
-    void on_actionRespawn_triggered();
     void on_actiontoggleFaceCulling_triggered();
+
+    void on_reset_triggered();
 
 private:
     void init();

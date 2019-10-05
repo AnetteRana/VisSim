@@ -133,19 +133,21 @@ void RenderWindow::init()
     mObjectsScene3.push_back(new Axis());
     mObjectsScene3.back()->mShader = mShaderProgram;
 
-    // ball
-    theball = (new InteractiveObject(1));
-    theball->mMatrix.translate(2.9f, 0, 2.1f); // start pos
-    theball->mMatrix.scale(.1f);
-    theball->mShader = mShaderProgramPhong;
-    mObjectsScene3.push_back(theball);
-
     // trekantbakke
     newGround = (new TriangleSurface(std::string("../VisSim/meshes/testBakke.txt")));
     newGround->mShader = mShaderProgramHeight;
     mObjectsScene3.push_back(newGround);
 
-    //*************************************************************************************************************************************************
+    // ball
+    theball = (new InteractiveObject(1));
+    theball->mMatrix.translate(2.9f, 0, 2.1f); // start pos
+    theball->startPos = Vector3d(2.9f, 0, 2.1f);
+    theball->mMatrix.scale(.1f);
+    theball->mShader = mShaderProgramPhong;
+    mObjectsScene3.push_back(theball);
+    theball->mGround = newGround;
+
+    //*****************************************************************************************************************************
     //*******************************
     //*********************** Cameras
     //*******************************
@@ -183,7 +185,8 @@ void RenderWindow::render()
     if (isSimulating)
     {
     // update the ball
-    newGround->setBallHeight(theball);
+    //newGround->setBallHeight(theball);
+    theball->move();
     }
 
     //to clear the screen for each redraw

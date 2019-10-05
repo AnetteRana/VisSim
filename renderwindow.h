@@ -49,6 +49,9 @@ public:
 
     void toggleCulling();
 
+    // VisSim
+    InteractiveObject* theball{nullptr};
+    TriangleSurface* newGround{nullptr};
     bool isSimulating{false};
 
 private slots:
@@ -66,9 +69,7 @@ private:
 
     VisualObject* mLightSource{nullptr};
 
-    // VisSim
-    InteractiveObject* theball{nullptr};
-    TriangleSurface* newGround{nullptr};
+
 
     QOpenGLContext *mContext;
     bool mInitialized;

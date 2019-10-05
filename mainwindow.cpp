@@ -79,14 +79,6 @@ void MainWindow::init()
 //    mRenderWindowContainer->setFocus();
 //}
 
-//void MainWindow::on_ChangeScene_clicked()
-//{
-//    mRenderWindow->changeScene();
-//    mRenderWindowContainer->setFocus();
-//}
-
-
-
 void MainWindow::on_actiondoor_triggered()
 {
         if (mRenderWindow->isSimulating)
@@ -106,11 +98,12 @@ void MainWindow::on_actionwireframe_triggered()
     //mRenderWindowContainer->setFocus();
 }
 
-void MainWindow::on_actionRespawn_triggered()
-{
-}
-
 void MainWindow::on_actiontoggleFaceCulling_triggered()
 {
     mRenderWindow->toggleCulling();
+}
+
+void MainWindow::on_reset_triggered()
+{
+    mRenderWindow->theball->reset();
 }

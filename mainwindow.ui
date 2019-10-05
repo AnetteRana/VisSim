@@ -65,13 +65,13 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="changeScene"/>
+   <addaction name="reset"/>
    <addaction name="actiondoor"/>
    <addaction name="actiontoggleFaceCulling"/>
    <addaction name="actionwireframe"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="changeScene">
+  <action name="reset">
    <property name="checkable">
     <bool>false</bool>
    </property>

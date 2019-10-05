@@ -1,16 +1,20 @@
 #include "interactiveobject.h"
 #include "octahedronball.h"
+#include "trianglesurface.h"
 
 InteractiveObject::InteractiveObject(int n) : OctahedronBall(n)
 {
 
 }
 
-void InteractiveObject::interactiveMove(GLfloat x, GLfloat y, GLfloat z)
+void InteractiveObject::move()
 {
-    Vector3d addedSpeed {x, y, z};
-    //qDebug() << "InteractiveObject::move";
-    //mMatrix.translate(x, y, z);
-    if (mVelocity.length() <= .5f) // max speed
-        mVelocity = mVelocity + addedSpeed;
+    mGround->setBallHeight(this);
+}
+
+void InteractiveObject::reset()
+{
+    mMatrix[{0, 3}] = startPos.x;
+            mMatrix[{1, 3}] = startPos.y;
+            mMatrix[{2, 3}] = startPos.z;
 }
