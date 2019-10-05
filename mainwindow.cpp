@@ -85,39 +85,19 @@ void MainWindow::init()
 //    mRenderWindowContainer->setFocus();
 //}
 
-//void MainWindow::on_doorButton_clicked()
-//{
-//    if (mRenderWindow->doorOpen)
-//    {
-//        mRenderWindow->doorOpen= false;
-//        mRenderWindow->door->mMatrix.rotate(130, Vector3d{0, 1, 0});
-//        mRenderWindow->door->mCollisionObject->isTrigger = false;
-//    }
-//    else
-//    {
-//        mRenderWindow->doorOpen= true;
-//        mRenderWindow->door->mMatrix.rotate(-130, Vector3d{0, 1, 0});
-//        mRenderWindow->door->mCollisionObject->isTrigger = true;
-//    }
-//    mRenderWindowContainer->setFocus();
-//}
 
 
 void MainWindow::on_actiondoor_triggered()
 {
-        if (mRenderWindow->doorOpen)
+        if (mRenderWindow->isSimulating)
         {
-            mRenderWindow->doorOpen= false;
-            mRenderWindow->door->mMatrix.rotate(130, Vector3d{0, 1, 0});
-            mRenderWindow->door->mCollisionObject->isTrigger = false;
+            mRenderWindow->isSimulating= false;
+
         }
         else
         {
-            mRenderWindow->doorOpen= true;
-            mRenderWindow->door->mMatrix.rotate(-130, Vector3d{0, 1, 0});
-            mRenderWindow->door->mCollisionObject->isTrigger = true;
+            mRenderWindow->isSimulating= true;
         }
-        //mRenderWindowContainer->setFocus();
 }
 
 void MainWindow::on_actionwireframe_triggered()

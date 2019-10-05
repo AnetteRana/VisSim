@@ -180,8 +180,11 @@ void RenderWindow::render()
     mTimeStart.restart(); //restart FPS clock
     mContext->makeCurrent(this); //must be called every frame (every time mContext->swapBuffers is called)
 
+    if (isSimulating)
+    {
     // update the ball
     newGround->setBallHeight(theball);
+    }
 
     //to clear the screen for each redraw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

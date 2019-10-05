@@ -418,16 +418,29 @@ void TriangleSurface::setBallHeight(InteractiveObject* ball)
 
         Vector3d baryCoord = ballPos.barycentricCoordinates(p0, p1, p2);
 
-        // give ball height
-        ball->mMatrix[{1, 3}] = (baryCoord.x * p0.y) + (baryCoord.y * p1.y) + (baryCoord.z * p2.y);
+        // give ball height of ground
+        //ball->mMatrix[{1, 3}] = (baryCoord.x * p0.y) + (baryCoord.y * p1.y) + (baryCoord.z * p2.y);
 
-        //push ball radius, along triangle normal
+//        //push ball radius, along triangle normal
         Vector3d ca = p1-p0;
         Vector3d ba = p2-p0;
         Vector3d triangleNormal = ca^ba;
         triangleNormal.normalize();
         //actually push ball
-        ball->mMatrix[{1, 3}] = ball->mMatrix[{1, 3}]+(1 * ball->mMatrix[{0, 0}]);
+        //ball->mMatrix[{1, 3}] = ball->mMatrix[{1, 3}]+(ball->mMatrix[{0, 0}]);
+
+        // move 1 gravity down
+        ball->mMatrix[{1, 3}] = ball->mMatrix[{1, 3}]-1;
+
+        // if under ground -> give ball height of ground
+        ball->mMatrix[{1, 3}] = (baryCoord.x * p0.y) + (baryCoord.y * p1.y) + (baryCoord.z * p2.y);
+        // + up a bit
+        ball->mMatrix[{1, 3}] = ball->mMatrix[{1, 3}]+(ball->mMatrix[{0, 0}]);
+
+        // push by ground normal
+        ball->mMatrix[{0, 3}] = ball->mMatrix[{0, 3}] + triangleNormal.x;
+        ball->mMatrix[{2, 3}] = ball->mMatrix[{2, 3}] + triangleNormal.z;
+
     }
 }
 

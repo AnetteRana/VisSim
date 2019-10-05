@@ -49,6 +49,8 @@ public:
 
     void toggleCulling();
 
+    bool isSimulating{false};
+
 private slots:
     void render();
 
