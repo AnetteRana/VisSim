@@ -135,7 +135,7 @@ void RenderWindow::init()
 
     // ball
     theball = (new InteractiveObject(1));
-    theball->mMatrix.translate(-0.1f, 0, -.0f); // start pos
+    theball->mMatrix.translate(2.9f, 0, 2.1f); // start pos
     theball->mMatrix.scale(.1f);
     theball->mShader = mShaderProgramPhong;
     mObjectsScene3.push_back(theball);

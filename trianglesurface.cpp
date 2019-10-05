@@ -48,7 +48,7 @@ void TriangleSurface::construct()
 
 void TriangleSurface::readFile(std::string filename)
 {
-    float maxX{0}, minX{0}, maxY{0}, minY{0}, maxZ{0}, minZ{0};
+    float maxX{0}, minX{0}, maxY{0}, minY{0}, maxZ{0}, minZ{0}; // to log while reading data
     //float wanted_maxX{5.f},wanted_maxY{5.f}, wanted_maxZ{5.f};
 
     std::ifstream inn;
@@ -122,11 +122,11 @@ void TriangleSurface::readFile(std::string filename)
 // makes the grid, but hight on 0 still
 void TriangleSurface::makeGrid()
 {
-    float maxX = 4;
-    float minX = -4;
-    float maxZ = 4;
-    float minZ = -4;
-    int subdiv = 3;
+    float maxX = radius;
+    float minX = -radius;
+    float maxZ = radius;
+    float minZ = -radius;
+    int subdiv = radius*2;
 
     float spacingX = (maxX - minX)/subdiv; // (maxX - minX) = distanceX
     float spacingZ = (maxZ - minZ)/subdiv;
@@ -164,7 +164,7 @@ void TriangleSurface::makeGrid()
     //    }
 
     // set height based on datapoints
-    float vertexRadius = 2;
+    float vertexRadius = .5f;
     int points = 0;
     float height = 0;
     for (int i = 0; i < mVertices.size(); i++)
