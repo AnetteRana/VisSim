@@ -89,6 +89,7 @@ void MainWindow::on_actiondoor_triggered()
         else
         {
             mRenderWindow->isSimulating= true;
+            mRenderWindow->theball->myTimer.start();
         }
 }
 
