@@ -123,12 +123,6 @@ void RenderWindow::init()
     //*********************** Scene 3
     //*******************************
 
-    // light?
-    mObjectsScene3.push_back(new InteractiveObject(1));
-    mObjectsScene3.back()->mMatrix.translate(0, 4, 0);
-    mObjectsScene3.back()->mMatrix.scale(.1f);
-    mLightSource = mObjectsScene3.back();
-
     // axis
     mObjectsScene3.push_back(new Axis());
     mObjectsScene3.back()->mShader = mShaderProgram;
@@ -140,12 +134,18 @@ void RenderWindow::init()
 
     // ball
     theball = (new InteractiveObject(1));
-    theball->startPos = Vector3d(2.9f, 12, 2.1f);
+    theball->startPos = Vector3d(2.9f, 5, 2.1f);
     theball->mMatrix.translate(theball->startPos); // start pos
-    theball->mMatrix.scale(.1f);
+    theball->position = theball->startPos;
+    theball->velocity = Vector3d(0,0,0); // initial velocity
+    theball->setSize(.1f);
     theball->mShader = mShaderProgramPhong;
     mObjectsScene3.push_back(theball);
     theball->mGround = newGround;
+
+    // light?
+    mLightSource = mObjectsScene3.back();
+
 
     //*****************************************************************************************************************************
     //*******************************
@@ -184,9 +184,9 @@ void RenderWindow::render()
 
     if (isSimulating)
     {
-    // update the ball
-    //newGround->setBallHeight(theball);
-    theball->move();
+        // update the ball
+        //newGround->setBallHeight(theball);
+        theball->move();
     }
 
     //to clear the screen for each redraw

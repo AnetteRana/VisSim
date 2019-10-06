@@ -358,7 +358,7 @@ int TriangleSurface::findTriangleRecursive(InteractiveObject* ball, int triangle
 {
     // calculate barysentric coordinate
 
-    Vector3d ballPos = {ball->mMatrix[{0, 3}], ball->mMatrix[{1, 3}], ball->mMatrix[{2, 3}]};
+    Vector3d ballPos = ball->position;//{ball->mMatrix[{0, 3}], ball->mMatrix[{1, 3}], ball->mMatrix[{2, 3}]};
 
     Vector3d p0 = {mVertices[mIndices[(triangleID*3)]].mPosition};
     Vector3d p1 = {mVertices[mIndices[(triangleID*3)+1]].mPosition};
@@ -400,7 +400,7 @@ int TriangleSurface::findTriangleRecursive(InteractiveObject* ball, int triangle
 
 void TriangleSurface::giveSurfaceTriangleToBall(InteractiveObject* ball)
 {
-    Vector3d ballPos = {ball->mMatrix[{0, 3}], ball->mMatrix[{1, 3}], ball->mMatrix[{2, 3}]};
+    Vector3d ballPos = ball->position;// {ball->mMatrix[{0, 3}], ball->mMatrix[{1, 3}], ball->mMatrix[{2, 3}]};
 
     // first find the triangle
     int triangleID = findTriangle(ball);
