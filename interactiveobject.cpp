@@ -18,42 +18,41 @@ void InteractiveObject::move()
     // get surface points
     mGround->giveSurfaceTriangleToBall(this);
 
-    // get ground normal
-    Vector3d ca = v1-v0;
-    Vector3d ba = v2-v0;
-    Vector3d currentSurfaceNormal = ca^ba;
-    currentSurfaceNormal.normalize();
-
     // get the barysentric coordinates of the ball on the plane (2d)
     Vector3d baryCoord = position.barycentricCoordinates(v0, v1, v2);
 
     float groundHeight = (baryCoord.x * v0.y) + (baryCoord.y * v1.y) + (baryCoord.z * v2.y);
 
-    // actually push ball ********************************************
-
-    // move 1 gravity down
-    //    mMatrix[{1, 3}] = mMatrix[{1, 3}]-0.01f;
-
-    float deltaTime = float(myTimer.elapsed()/1000.f) - float(lastTimestamp);
-    qDebug() << "now time: " << myTimer.elapsed()/1000.f << "last time: " << lastTimestamp << "delta " << deltaTime;
+    // update time
+    float deltaTime = float(myTimer.elapsed()/1000.f) - float(lastTimestamp); // find deltaTime
     lastTimestamp = myTimer.elapsed()/1000.f;
-    //qDebug() << "Simulated time: " << lastTimestamp/1000.f * timeScale;
-    qDebug() << "velocity: ";
-                velocity.print();
+
+
+    // actually push ball ********************************************
 
     velocity += gravity*deltaTime*timeScale;
 
     // move by velocity
     position = position + (velocity*deltaTime*timeScale);
 
-
     // does it hit the ground?
     if (position.y <= (groundHeight+ballRadius))
     {
+        // get surface normal
+        Vector3d ca = v1-v0;
+        Vector3d ba = v2-v0;
+        Vector3d currentSurfaceNormal = ca^ba;
+        currentSurfaceNormal.normalize();
+
+
         //velocity = -velocity ;
 
         // stop simulation
-        mOwner->isSimulating = false;
+        if (mOwner->isSimulating)
+        {
+            mOwner->toggleSimulation();
+            infoPrinting();
+        }
 
         qDebug() << "Ball is on ground";
 
@@ -61,9 +60,9 @@ void InteractiveObject::move()
         // if under ground -> give ball height of ground
         if (position.y < (groundHeight+ballRadius))
         {
-            mMatrix[{1, 3}] = (groundHeight+ballRadius);
-            //velocity += -gravity*timeScale; // no, this should be the normal of the ground?
+            //position.setY((groundHeight+ballRadius));
         }
+
         //        // + up a bit
         //        mMatrix[{1, 3}] = mMatrix[{1, 3}]+(mMatrix[{0, 0}]);
 
@@ -105,4 +104,15 @@ void InteractiveObject::setVelocity(Vector3d vel)
 {
     initialVelocity = vel;
     velocity = vel;
+}
+
+void InteractiveObject::infoPrinting()
+{
+    qDebug() << "Simulation time:" << myTimer.elapsed()/1000.f << "seconds (realtime)";
+    qDebug() << "Simulated seconds:" << timeScale*myTimer.elapsed()/1000.f;
+    qDebug() << "velocity:";
+    velocity.print();
+    Vector3d distanceTravelled = initialPosition - position;
+    qDebug() << "distance:";
+    distanceTravelled.print();
 }

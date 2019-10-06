@@ -135,7 +135,7 @@ void RenderWindow::init()
     // ball
     theball = (new InteractiveObject(1, this));
     theball->setVelocity(Vector3d(0,0,0));
-    theball->setPosition(Vector3d(2.9f, 52, 2.1f));
+    theball->setPosition(Vector3d(2.9f, 12, 2.1f));
     theball->mMatrix.translate(theball->initialPosition);
     theball->setSize(.1f);
     theball->mShader = mShaderProgramPhong;
@@ -158,12 +158,15 @@ void RenderWindow::init()
 
     mCamera.push_back(new Camera{Vector3d(0, 6, 6), true});
     mCamera.push_back(new Camera{Vector3d(6, 5, 6), true});
+    mCamera.push_back(new Camera{Vector3d(0, 0, 0), true});
 
     mCamera[0]->setLookAtTarget(new Plane);
     mCamera[1]->setLookAtTarget(new Plane); // lazy way to look at center
+    mCamera[2]->setLookAtTarget(theball);
 
     mCamera[0]->init(mShaderProgramPhong);
     mCamera[1]->init(mShaderProgramPhong);
+    mCamera[2]->init(mShaderProgramPhong);
 
     for (auto it = mObjectsScene3.begin(); it != mObjectsScene3.end(); it++)
     {
@@ -199,6 +202,10 @@ void RenderWindow::render()
         GLfloat slowdown{15};
         mCamera[1]->mPosition.setX(10*cos(myRuntime/slowdown));
         mCamera[1]->mPosition.setZ(10*sin(myRuntime/slowdown));
+    }
+    if (currentCamera == 2)
+    {
+        mCamera[2]->mPosition = theball->position+Vector3d(0,10,20);
     }
 
     //*************************************************************************************************************************
@@ -313,6 +320,7 @@ void RenderWindow::keyPressEvent(QKeyEvent *event)
     // change camera
     if(event->key() == Qt::Key_1){ currentCamera = 0; }
     if(event->key() == Qt::Key_2){ currentCamera = 1; }
+    if(event->key() == Qt::Key_3){ currentCamera = 2; }
 }
 
 void RenderWindow::toggleWireframe()
@@ -340,6 +348,25 @@ void RenderWindow::toggleCulling()
     {
         cullingOn=true;
         glEnable(GL_CULL_FACE);
+    }
+}
+
+void RenderWindow::toggleSimulation()
+{
+    // is on; turn it off
+    if (isSimulating)
+    {
+        isSimulating= false;
+    }
+
+    // is off; turn it on
+    else
+    {
+        qDebug() << "Starting simulation.";
+        theball->reset();
+        theball->myTimer.start();
+        theball->lastTimestamp = 0;
+        isSimulating= true;
     }
 }
 

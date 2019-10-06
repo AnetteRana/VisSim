@@ -79,20 +79,6 @@ void MainWindow::init()
 //    mRenderWindowContainer->setFocus();
 //}
 
-void MainWindow::on_actiondoor_triggered()
-{
-        if (mRenderWindow->isSimulating)
-        {
-            mRenderWindow->isSimulating= false;
-
-        }
-        else
-        {
-            mRenderWindow->isSimulating= true;
-            mRenderWindow->theball->myTimer.start();
-        }
-}
-
 void MainWindow::on_actionwireframe_triggered()
 {
     mRenderWindow->toggleWireframe();
@@ -107,4 +93,14 @@ void MainWindow::on_actiontoggleFaceCulling_triggered()
 void MainWindow::on_reset_triggered()
 {
     mRenderWindow->theball->reset();
+}
+
+void MainWindow::on_timescale_valueChanged(double arg1)
+{
+    mRenderWindow->theball->timeScale = arg1;
+}
+
+void MainWindow::on_toggleSimulate_triggered()
+{
+    mRenderWindow->toggleSimulation();
 }

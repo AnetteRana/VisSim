@@ -53,6 +53,7 @@ public:
     InteractiveObject* theball{nullptr};
     TriangleSurface* newGround{nullptr};
     bool isSimulating{false};
+    void toggleSimulation();
 
 private slots:
     void render();

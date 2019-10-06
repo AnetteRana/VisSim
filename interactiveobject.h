@@ -33,6 +33,8 @@ public:
     Vector3d velocity{0,0,0};
     Vector3d gravity{0, -9.8f, 0};
 
+    void infoPrinting();
+
     // info about current surface
     Vector3d v0;
     Vector3d v1;

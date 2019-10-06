@@ -19,11 +19,12 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actiondoor_triggered();
     void on_actionwireframe_triggered();
     void on_actiontoggleFaceCulling_triggered();
 
     void on_reset_triggered();
+    void on_timescale_valueChanged(double arg1);
+    void on_toggleSimulate_triggered();
 
 private:
     void init();
