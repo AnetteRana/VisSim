@@ -5,6 +5,9 @@
 InteractiveObject::InteractiveObject(int n) : OctahedronBall(n)
 {
 mMatrix.scale(ballRadius);
+
+setPosition(Vector3d(0,0,0));
+setVelocity(Vector3d(0,0,0));
 }
 
 void InteractiveObject::move()
@@ -59,17 +62,29 @@ void InteractiveObject::move()
 
 void InteractiveObject::reset()
 {
-    position = startPos;
+    position = initialPosition;
     mMatrix[{0, 3}] = position.x;
     mMatrix[{1, 3}] = position.y;
     mMatrix[{2, 3}] = position.z;
 
-    // assuming we don't want an initial velocity
-    velocity = Vector3d{0,0,0};
+    velocity = initialVelocity;
 }
 
 void InteractiveObject::setSize(float size)
 {
     ballRadius = size;
     mMatrix.scale(ballRadius);
+}
+
+void InteractiveObject::setPosition(Vector3d pos)
+{
+    initialPosition = pos;
+    position = pos;
+    mMatrix.translate(pos);
+}
+
+void InteractiveObject::setVelocity(Vector3d vel)
+{
+    initialVelocity = vel;
+    velocity = vel;
 }

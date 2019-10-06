@@ -15,7 +15,7 @@ public:
 
     TriangleSurface* mGround{nullptr};
 
-    Vector3d startPos{0,0,0};
+
 
     void reset();
 
@@ -24,6 +24,8 @@ public:
     float timeScale = .01f;
 
     // simulation stuff?
+    Vector3d initialVelocity{0,0,0};
+    Vector3d initialPosition{0,0,0};
     Vector3d position{0,0,0};
     Vector3d velocity{0,0,0};
     Vector3d gravity{0, -9.8f, 0};
@@ -38,7 +40,11 @@ public:
     float ballRadius{1.f};
     void setSize(float);
 
+    void setPosition(Vector3d);
+    void setVelocity(Vector3d);
+
     //void draw() override;
+
 };
 
 #endif // INTERACTIVEOBJECT_H
