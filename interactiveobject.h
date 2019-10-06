@@ -4,24 +4,27 @@
 #include "OctahedronBall.h"
 #include <QElapsedTimer>
 
+class RenderWindow;
+
 class TriangleSurface;
 
 class InteractiveObject : public OctahedronBall
 {
 public:
-    InteractiveObject(int n);
+    InteractiveObject(int n, RenderWindow*);
 
     void move();
 
     TriangleSurface* mGround{nullptr};
 
-
+    RenderWindow* mOwner{nullptr};
 
     void reset();
 
     // simulation time
     QElapsedTimer myTimer;
-    float timeScale = .01f;
+    float timeScale = 1.f;
+    float lastTimestamp{0};
 
     // simulation stuff?
     Vector3d initialVelocity{0,0,0};

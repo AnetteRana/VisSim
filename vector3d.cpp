@@ -25,6 +25,15 @@ Vector3d::Vector3d(Vector4d vec)
 }
 
 // operator overloads
+Vector3d Vector3d::operator*(Vector3d value)
+{
+    GLfloat u = x * value.x;
+    GLfloat v = y * value.y;
+    GLfloat w = z * value.z;
+
+    return Vector3d {u, v, w};
+}
+
 Vector3d Vector3d::operator*(GLfloat value)
 {
     GLfloat u = x * value;

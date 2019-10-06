@@ -1,13 +1,16 @@
 #include "interactiveobject.h"
 #include "octahedronball.h"
 #include "trianglesurface.h"
+#include "renderwindow.h"
 
-InteractiveObject::InteractiveObject(int n) : OctahedronBall(n)
+InteractiveObject::InteractiveObject(int n, RenderWindow* owner) : OctahedronBall(n)
 {
-mMatrix.scale(ballRadius);
+    mOwner = owner;
 
-setPosition(Vector3d(0,0,0));
-setVelocity(Vector3d(0,0,0));
+    mMatrix.scale(ballRadius);
+
+    setPosition(Vector3d(0,0,0));
+    setVelocity(Vector3d(0,0,0));
 }
 
 void InteractiveObject::move()
@@ -29,31 +32,46 @@ void InteractiveObject::move()
     // actually push ball ********************************************
 
     // move 1 gravity down
-//    mMatrix[{1, 3}] = mMatrix[{1, 3}]-0.01f;
+    //    mMatrix[{1, 3}] = mMatrix[{1, 3}]-0.01f;
 
-    velocity += gravity*timeScale;
+    float deltaTime = float(myTimer.elapsed()/1000.f) - float(lastTimestamp);
+    qDebug() << "now time: " << myTimer.elapsed()/1000.f << "last time: " << lastTimestamp << "delta " << deltaTime;
+    lastTimestamp = myTimer.elapsed()/1000.f;
+    //qDebug() << "Simulated time: " << lastTimestamp/1000.f * timeScale;
+    qDebug() << "velocity: ";
+                velocity.print();
+
+    velocity += gravity*deltaTime*timeScale;
 
     // move by velocity
-    position = position + (velocity*timeScale);
+    position = position + (velocity*deltaTime*timeScale);
 
 
+    // does it hit the ground?
     if (position.y <= (groundHeight+ballRadius))
     {
-        velocity = -velocity;
+        //velocity = -velocity ;
+
+        // stop simulation
+        mOwner->isSimulating = false;
 
         qDebug() << "Ball is on ground";
 
-//        // if under ground -> give ball height of ground
-//        mMatrix[{1, 3}] = groundHeight;
-//        // + up a bit
-//        mMatrix[{1, 3}] = mMatrix[{1, 3}]+(mMatrix[{0, 0}]);
 
-//        // push by ground normal
-//        mMatrix[{0, 3}] = mMatrix[{0, 3}] + currentSurfaceNormal.x;
-//        mMatrix[{2, 3}] = mMatrix[{2, 3}] + currentSurfaceNormal.z;
+        // if under ground -> give ball height of ground
+        if (position.y < (groundHeight+ballRadius))
+        {
+            mMatrix[{1, 3}] = (groundHeight+ballRadius);
+            //velocity += -gravity*timeScale; // no, this should be the normal of the ground?
+        }
+        //        // + up a bit
+        //        mMatrix[{1, 3}] = mMatrix[{1, 3}]+(mMatrix[{0, 0}]);
+
+        //        // push by ground normal
+        //        mMatrix[{0, 3}] = mMatrix[{0, 3}] + currentSurfaceNormal.x;
+        //        mMatrix[{2, 3}] = mMatrix[{2, 3}] + currentSurfaceNormal.z;
     }
 
-    qDebug() << "Simulated time: " << float(myTimer.elapsed()/1000.f) * timeScale;
 
     mMatrix[{0, 3}] = position.x;
     mMatrix[{1, 3}] = position.y;

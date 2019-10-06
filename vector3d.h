@@ -19,10 +19,12 @@ public:
     Vector3d(GLfloat x=.0f, GLfloat y = .0f, GLfloat z = .0f);// Constructor
     Vector3d(Vector4d);
 
+    Vector3d operator*(Vector3d);
     Vector3d operator*(GLfloat);
     Vector3d operator/(GLfloat);
     Vector3d operator+(GLfloat);
     Vector3d operator-(GLfloat);
+
 
     const Vector3d& operator=(const Vector3d& v);       // Assignment
     const Vector3d& operator+=(const Vector3d& v);

@@ -133,9 +133,9 @@ void RenderWindow::init()
     mObjectsScene3.push_back(newGround);
 
     // ball
-    theball = (new InteractiveObject(1));
+    theball = (new InteractiveObject(1, this));
     theball->setVelocity(Vector3d(0,0,0));
-    theball->setPosition(Vector3d(2.9f, 5, 2.1f));
+    theball->setPosition(Vector3d(2.9f, 52, 2.1f));
     theball->mMatrix.translate(theball->initialPosition);
     theball->setSize(.1f);
     theball->mShader = mShaderProgramPhong;
