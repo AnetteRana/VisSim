@@ -18,14 +18,20 @@ void InteractiveObject::move()
     // get surface points
     isOnGround = mGround->giveSurfaceTriangleToBall(this);
 
-    //    if (isOnGround != true) // stop simulation when out of bounds
-    //    {
-    //        if (mOwner->isSimulating)
-    //        {
-    //            mOwner->toggleSimulation();
-    //            infoPrinting();
-    //        }
-    //    }
+    // if out of bounds
+    if (isOnGround != true)
+    {
+        if (abs(position.x) > mGround->radius)
+            velocity.x = -velocity.x;
+        if (abs(position.z) > mGround->radius)
+            velocity.z = -velocity.z;
+
+        //            if (mOwner->isSimulating)
+        //            {
+        //                mOwner->toggleSimulation();
+        //                infoPrinting();
+        //            }
+    }
 
     // get the barysentric coordinates of the ball on the plane (2d)
     Vector3d baryCoord = position.barycentricCoordinates(v0, v1, v2);
@@ -38,11 +44,8 @@ void InteractiveObject::move()
 
 
     // actually push ball ********************************************
-
-    velocity += gravity*deltaTime*timeScale;
-
     // move by velocity
-    position = position + (velocity*deltaTime*timeScale);
+    position += velocity*deltaTime*timeScale;
 
     // does it hit the ground?
     if (position.y <= (groundHeight+ballRadius))
@@ -66,15 +69,24 @@ void InteractiveObject::move()
         currentSurfaceNormal.normalize();
 
         // roll along surface
-        velocity += (currentSurfaceNormal*bounciness);
+        //velocity += (currentSurfaceNormal*bounciness)*(deltaTime*timeScale);
+        Vector3d v = currentSurfaceNormal;
 
-        // if under ground -> give ball height of ground
-        if (position.y < (groundHeight+ballRadius))
-        {
-            position.setY((groundHeight+ballRadius));
-        }
+        velocity += Vector3d(v.x*v.y, (v.y*v.y)-1, v.z*v.y) * (deltaTime*timeScale) * 9.8f;
+
+        // add bad friction
+        velocity += (-velocity/10)* (deltaTime*timeScale);
+    }
+    else // freefall
+    {
+        velocity += gravity*deltaTime*timeScale;
     }
 
+    // if under ground -> give ball height of ground
+    if (position.y < (groundHeight+ballRadius))
+    {
+        position.setY((groundHeight+ballRadius));
+    }
 
     mMatrix[{0, 3}] = position.x;
     mMatrix[{1, 3}] = position.y;
