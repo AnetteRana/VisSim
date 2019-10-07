@@ -68,14 +68,8 @@ void InteractiveObject::move()
         currentSurfaceNormal.normalize();
 
         // roll along surface
-        velocity += currentSurfaceNormal *(velocity.length()*deltaTime*timeScale*bounciness);
-        //velocity += (currentSurfaceNormal)*(deltaTime*timeScale)*bounciness;
-
-        Vector3d v = currentSurfaceNormal;
-        //velocity += Vector3d(v.x*v.y, (v.y*v.y)-1, v.z*v.y) * (deltaTime*timeScale) * 9.8f;
-
-        // add bad friction
-        //velocity += (-velocity/10)* (deltaTime*timeScale);
+        //velocity += (currentSurfaceNormal+gravity) *(deltaTime*timeScale*bounciness);
+        velocity += (currentSurfaceNormal*velocity.length()) *(deltaTime*timeScale*bounciness);
     }
     else // freefall
     {

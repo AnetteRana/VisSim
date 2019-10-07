@@ -134,7 +134,7 @@ void RenderWindow::init()
 
     // ball
     theball = (new InteractiveObject(1, this));
-    theball->setVelocity(Vector3d(0,0,0));
+    theball->setVelocity(Vector3d(0,-50,0));
     theball->setPosition(Vector3d(2.9f, 12, 2.1f));
     theball->mMatrix.translate(theball->initialPosition);
     theball->setSize(.1f);
