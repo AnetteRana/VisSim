@@ -398,7 +398,7 @@ int TriangleSurface::findTriangleRecursive(InteractiveObject* ball, int triangle
     return -1; // outside of plane
 }
 
-void TriangleSurface::giveSurfaceTriangleToBall(InteractiveObject* ball)
+bool TriangleSurface::giveSurfaceTriangleToBall(InteractiveObject* ball)
 {
     Vector3d ballPos = ball->position;// {ball->mMatrix[{0, 3}], ball->mMatrix[{1, 3}], ball->mMatrix[{2, 3}]};
 
@@ -408,6 +408,7 @@ void TriangleSurface::giveSurfaceTriangleToBall(InteractiveObject* ball)
     if (triangleID < 0)
     {
         qDebug() << "Outide of bounds";
+        return false;
     }
     else
     {
@@ -416,6 +417,7 @@ void TriangleSurface::giveSurfaceTriangleToBall(InteractiveObject* ball)
         ball->v0 = {mVertices[mIndices[(triangleID*3)]].mPosition};
         ball->v1 = {mVertices[mIndices[(triangleID*3)+1]].mPosition};
         ball->v2 = {mVertices[mIndices[(triangleID*3)+2]].mPosition};
+        return true;
     }
 }
 

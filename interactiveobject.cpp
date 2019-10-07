@@ -16,7 +16,16 @@ InteractiveObject::InteractiveObject(int n, RenderWindow* owner) : OctahedronBal
 void InteractiveObject::move()
 {
     // get surface points
-    mGround->giveSurfaceTriangleToBall(this);
+    isOnGround = mGround->giveSurfaceTriangleToBall(this);
+
+//    if (isOnGround != true) // stop simulation when out of bounds
+//    {
+//        if (mOwner->isSimulating)
+//        {
+//            mOwner->toggleSimulation();
+//            infoPrinting();
+//        }
+//    }
 
     // get the barysentric coordinates of the ball on the plane (2d)
     Vector3d baryCoord = position.barycentricCoordinates(v0, v1, v2);
@@ -44,14 +53,16 @@ void InteractiveObject::move()
         Vector3d currentSurfaceNormal = ca^ba;
         currentSurfaceNormal.normalize();
 
+        velocity += currentSurfaceNormal;
 
-        //velocity = -velocity ;
-
-        // stop simulation
-        if (mOwner->isSimulating)
+        // stop simulation on impact
+        if (false)
         {
-            mOwner->toggleSimulation();
-            infoPrinting();
+            if (mOwner->isSimulating)
+            {
+                mOwner->toggleSimulation();
+                infoPrinting();
+            }
         }
 
         qDebug() << "Ball is on ground";
@@ -60,7 +71,7 @@ void InteractiveObject::move()
         // if under ground -> give ball height of ground
         if (position.y < (groundHeight+ballRadius))
         {
-            //position.setY((groundHeight+ballRadius));
+            position.setY((groundHeight+ballRadius));
         }
 
         //        // + up a bit

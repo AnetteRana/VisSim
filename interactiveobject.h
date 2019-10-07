@@ -16,6 +16,7 @@ public:
     void move();
 
     TriangleSurface* mGround{nullptr};
+    bool isOnGround{true};
 
     RenderWindow* mOwner{nullptr};
 

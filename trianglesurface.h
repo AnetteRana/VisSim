@@ -40,7 +40,7 @@ public:
     void setNeighbours();
     int findTriangle(InteractiveObject* ball);
     int findTriangleRecursive(InteractiveObject* ball, int triangleID);
-    void giveSurfaceTriangleToBall(InteractiveObject* ball);
+    bool giveSurfaceTriangleToBall(InteractiveObject* ball);
 };
 
 #endif // TRIANGLESURFACE_H
