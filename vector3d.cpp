@@ -121,7 +121,7 @@ float Vector3d::operator * (const Vector3d& v) const
 
 Vector3d Vector3d::operator ^ (const Vector3d& v) const
 {
-    return Vector3d( ((y*v.z)-(z*v.y)), -((x*v.z)-(z*v.x)), ((x*v.y)-(y*v.z)) );
+    return Vector3d( ((y*v.z)-(z*v.y)), -((x*v.z)-(z*v.x)), ((x*v.y)-(y*v.x)) );
 }
 
 GLfloat Vector3d::length() const

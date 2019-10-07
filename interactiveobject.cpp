@@ -42,7 +42,6 @@ void InteractiveObject::move()
     float deltaTime = float(myTimer.elapsed()/1000.f) - float(lastTimestamp); // find deltaTime
     lastTimestamp = myTimer.elapsed()/1000.f;
 
-
     // actually push ball ********************************************
     // move by velocity
     position += velocity*deltaTime*timeScale;
@@ -60,7 +59,7 @@ void InteractiveObject::move()
             }
         }
 
-        qDebug() << "Ball is on ground";
+        //qDebug() << "Ball is on ground";
 
         // get surface normal
         Vector3d ca = v1-v0;
@@ -69,13 +68,14 @@ void InteractiveObject::move()
         currentSurfaceNormal.normalize();
 
         // roll along surface
-        //velocity += (currentSurfaceNormal*bounciness)*(deltaTime*timeScale);
-        Vector3d v = currentSurfaceNormal;
+        velocity += currentSurfaceNormal *(velocity.length()*deltaTime*timeScale*bounciness);
+        //velocity += (currentSurfaceNormal)*(deltaTime*timeScale)*bounciness;
 
-        velocity += Vector3d(v.x*v.y, (v.y*v.y)-1, v.z*v.y) * (deltaTime*timeScale) * 9.8f;
+        Vector3d v = currentSurfaceNormal;
+        //velocity += Vector3d(v.x*v.y, (v.y*v.y)-1, v.z*v.y) * (deltaTime*timeScale) * 9.8f;
 
         // add bad friction
-        velocity += (-velocity/10)* (deltaTime*timeScale);
+        //velocity += (-velocity/10)* (deltaTime*timeScale);
     }
     else // freefall
     {
