@@ -26,6 +26,8 @@ private slots:
     void on_timescale_valueChanged(double arg1);
     void on_toggleSimulate_triggered();
 
+    void on_bounciness_valueChanged(double arg1);
+
 private:
     void init();
     Ui::MainWindow *ui;

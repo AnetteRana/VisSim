@@ -18,14 +18,14 @@ void InteractiveObject::move()
     // get surface points
     isOnGround = mGround->giveSurfaceTriangleToBall(this);
 
-//    if (isOnGround != true) // stop simulation when out of bounds
-//    {
-//        if (mOwner->isSimulating)
-//        {
-//            mOwner->toggleSimulation();
-//            infoPrinting();
-//        }
-//    }
+    //    if (isOnGround != true) // stop simulation when out of bounds
+    //    {
+    //        if (mOwner->isSimulating)
+    //        {
+    //            mOwner->toggleSimulation();
+    //            infoPrinting();
+    //        }
+    //    }
 
     // get the barysentric coordinates of the ball on the plane (2d)
     Vector3d baryCoord = position.barycentricCoordinates(v0, v1, v2);
@@ -47,15 +47,7 @@ void InteractiveObject::move()
     // does it hit the ground?
     if (position.y <= (groundHeight+ballRadius))
     {
-        // get surface normal
-        Vector3d ca = v1-v0;
-        Vector3d ba = v2-v0;
-        Vector3d currentSurfaceNormal = ca^ba;
-        currentSurfaceNormal.normalize();
-
-        velocity += currentSurfaceNormal;
-
-        // stop simulation on impact
+        // stop simulation on impact?
         if (false)
         {
             if (mOwner->isSimulating)
@@ -67,19 +59,20 @@ void InteractiveObject::move()
 
         qDebug() << "Ball is on ground";
 
+        // get surface normal
+        Vector3d ca = v1-v0;
+        Vector3d ba = v2-v0;
+        Vector3d currentSurfaceNormal = ca^ba;
+        currentSurfaceNormal.normalize();
+
+        // roll along surface
+        velocity += (currentSurfaceNormal*bounciness);
 
         // if under ground -> give ball height of ground
         if (position.y < (groundHeight+ballRadius))
         {
             position.setY((groundHeight+ballRadius));
         }
-
-        //        // + up a bit
-        //        mMatrix[{1, 3}] = mMatrix[{1, 3}]+(mMatrix[{0, 0}]);
-
-        //        // push by ground normal
-        //        mMatrix[{0, 3}] = mMatrix[{0, 3}] + currentSurfaceNormal.x;
-        //        mMatrix[{2, 3}] = mMatrix[{2, 3}] + currentSurfaceNormal.z;
     }
 
 

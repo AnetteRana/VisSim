@@ -104,3 +104,8 @@ void MainWindow::on_toggleSimulate_triggered()
 {
     mRenderWindow->toggleSimulation();
 }
+
+void MainWindow::on_bounciness_valueChanged(double arg1)
+{
+    mRenderWindow->theball->bounciness = arg1;
+}
