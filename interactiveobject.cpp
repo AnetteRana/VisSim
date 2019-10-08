@@ -21,9 +21,9 @@ void InteractiveObject::move()
     // if out of bounds
     if (isOnGround != true)
     {
-        if (abs(position.x) > mGround->radius)
+        if (abs(position.x) > mGround->gridRadiusX)
             velocity.x = -velocity.x;
-        if (abs(position.z) > mGround->radius)
+        if (abs(position.z) > mGround->gridRadiusZ)
             velocity.z = -velocity.z;
 
         //            if (mOwner->isSimulating)
@@ -108,6 +108,10 @@ void InteractiveObject::setPosition(Vector3d pos)
     initialPosition = pos;
     position = pos;
     mMatrix.translate(pos);
+
+    mMatrix[{0, 3}] = position.x;
+    mMatrix[{1, 3}] = position.y;
+    mMatrix[{2, 3}] = position.z;
 }
 
 void InteractiveObject::setVelocity(Vector3d vel)

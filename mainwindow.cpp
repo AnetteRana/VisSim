@@ -93,11 +93,21 @@ void MainWindow::on_actiontoggleFaceCulling_triggered()
 void MainWindow::on_reset_triggered()
 {
     mRenderWindow->theball->reset();
+
+    for (auto it = mRenderWindow->balls.begin(); it != mRenderWindow->balls.end(); it++)
+    {
+        (*it)->reset();
+    }
 }
 
 void MainWindow::on_timescale_valueChanged(double arg1)
 {
     mRenderWindow->theball->timeScale = arg1;
+
+    for (auto it = mRenderWindow->balls.begin(); it != mRenderWindow->balls.end(); it++)
+    {
+        (*it)->timeScale = arg1;
+    }
 }
 
 void MainWindow::on_toggleSimulate_triggered()
@@ -108,4 +118,14 @@ void MainWindow::on_toggleSimulate_triggered()
 void MainWindow::on_bounciness_valueChanged(double arg1)
 {
     mRenderWindow->theball->bounciness = arg1;
+
+    for (auto it = mRenderWindow->balls.begin(); it != mRenderWindow->balls.end(); it++)
+    {
+        (*it)->bounciness = arg1;
+    }
+}
+
+void MainWindow::on_cameraRadiusBox_valueChanged(double arg1)
+{
+    mRenderWindow->cameraRadius = arg1;
 }

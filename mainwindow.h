@@ -28,6 +28,8 @@ private slots:
 
     void on_bounciness_valueChanged(double arg1);
 
+    void on_cameraRadiusBox_valueChanged(double arg1);
+
 private:
     void init();
     Ui::MainWindow *ui;

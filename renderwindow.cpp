@@ -128,19 +128,33 @@ void RenderWindow::init()
     mObjectsScene3.back()->mShader = mShaderProgram;
 
     // trekantbakke
-    newGround = (new TriangleSurface(std::string("../VisSim/meshes/testBakke.txt")));
+    newGround = (new TriangleSurface(std::string("../VisSim/meshes/18896Points.txt")));
     newGround->mShader = mShaderProgramHeight;
     mObjectsScene3.push_back(newGround);
 
     // ball
-    theball = (new InteractiveObject(1, this));
+    theball = (new InteractiveObject(2, this));
     theball->setVelocity(Vector3d(0,-50,0));
-    theball->setPosition(Vector3d(2.9f, 12, 2.1f));
+    theball->setPosition(Vector3d(-200.f, 100, 2.1f));
     theball->mMatrix.translate(theball->initialPosition);
-    theball->setSize(.1f);
+    theball->setSize(1.f);
     theball->mShader = mShaderProgramPhong;
     mObjectsScene3.push_back(theball);
     theball->mGround = newGround;
+
+    // more ball?
+    for (int i = 0; i < 25; i++)
+    {
+        balls.push_back(new InteractiveObject(2, this));
+        balls.back()->setVelocity(Vector3d(0,-50,0));
+        balls.back()->setPosition(Vector3d(rand()%600-300, 100, rand()%600-300));
+        balls.back()->setSize((rand()%5+1));
+        //balls.back()->mMatrix.translate(balls.back()->initialPosition);
+        balls.back()->mShader = mShaderProgramPhong;
+        balls.back()->mGround = newGround;
+        mObjectsScene3.push_back(balls.back());
+        balls.back()->reset();
+    }
 
     // light?
     mLightSource = mObjectsScene3.back();
@@ -156,8 +170,8 @@ void RenderWindow::init()
     mMatrixUniform = glGetUniformLocation( mShaderProgramPhong->getProgram(), "matrix" );
     //mMatrixUniform = glGetUniformLocation( mShaderProgramPhong->getProgram(), "lightSource" );
 
-    mCamera.push_back(new Camera{Vector3d(0, 6, 6), true});
-    mCamera.push_back(new Camera{Vector3d(6, 5, 6), true});
+    mCamera.push_back(new Camera{Vector3d(0, 30, 6), true});
+    mCamera.push_back(new Camera{Vector3d(76, 75, 6), true});
     mCamera.push_back(new Camera{Vector3d(0, 0, 0), true});
 
     mCamera[0]->setLookAtTarget(new Plane);
@@ -189,6 +203,9 @@ void RenderWindow::render()
         // update the ball
         //newGround->setBallHeight(theball);
         theball->move();
+
+        for (auto it = balls.begin(); it != balls.end(); it++)
+            (*it)->move();
     }
 
     //to clear the screen for each redraw
@@ -200,8 +217,9 @@ void RenderWindow::render()
     if (currentCamera == 1)
     {
         GLfloat slowdown{15};
-        mCamera[1]->mPosition.setX(10*cos(myRuntime/slowdown));
-        mCamera[1]->mPosition.setZ(10*sin(myRuntime/slowdown));
+        mCamera[1]->mPosition.setX(cameraRadius*cos(myRuntime/slowdown));
+        mCamera[1]->mPosition.setZ(cameraRadius*sin(myRuntime/slowdown));
+        mCamera[1]->mPosition.setY(cameraRadius);
     }
     if (currentCamera == 2)
     {
@@ -362,6 +380,13 @@ void RenderWindow::toggleSimulation()
     // is off; turn it on
     else
     {
+        for (auto it = balls.begin(); it != balls.end(); it++)
+        {
+            (*it)->reset();
+            (*it)->myTimer.start();
+            (*it)->lastTimestamp = 0;
+        }
+
         qDebug() << "Starting simulation.";
         theball->reset();
         theball->myTimer.start();

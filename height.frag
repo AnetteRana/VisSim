@@ -22,14 +22,14 @@ void main() {
     vec4 result;
     float height = pos.y;
 
-    vec4 shore = diffuse * lightColor * vec4(0.9, 0.8, 0.6, 1) * height/2;
-    vec4 grass = diffuse * lightColor * vec4(.2, .7, .2, 1) * height/5;
-    vec4 cliff = diffuse * lightColor * vec4(.2, .2, .2, 1) * height;
+    //vec4 shore = diffuse * lightColor * vec4(0.9, 0.8, 0.6, 1) * height/2;
+    vec4 water = vec4(0, 0, .5f, 1) * (height+150)/100;//
+    vec4 shore = vec4(0.9, 0.8, 0.6, 1) ;
+    vec4 grass = vec4(.2, .7, .2, 1) * (height+50)/100;
 
     if (height < 0.2) // water
     {
-        groundColor = vec4(0, 0, .5f, 1);
-        result = diffuse * lightColor * groundColor + height;
+        result = water;//diffuse * lightColor * groundColor + height;
     }
     else if (height < 1.2f) // shores
     {

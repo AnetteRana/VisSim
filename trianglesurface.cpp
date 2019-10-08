@@ -1,7 +1,6 @@
 #include "trianglesurface.h"
 #include "collisionsphere.h"
 
-
 #include "interactiveobject.h"
 
 TriangleSurface::TriangleSurface() : VisualObject() {
@@ -19,6 +18,10 @@ TriangleSurface::TriangleSurface() : VisualObject() {
 TriangleSurface::TriangleSurface(std::string filename) : VisualObject()
 {
     readFile(filename);
+
+    makeGrid();
+    setNeighbours();
+    giveTrianglesNormals();
 
     //mCollisionObject = new CollisionSphere(this, 1);
 }
@@ -45,132 +48,194 @@ void TriangleSurface::construct()
         }
 }
 
-
 void TriangleSurface::readFile(std::string filename)
 {
     float maxX{0}, minX{0}, maxY{0}, minY{0}, maxZ{0}, minZ{0}; // to log while reading data
-    //float wanted_maxX{5.f},wanted_maxY{5.f}, wanted_maxZ{5.f};
 
     std::ifstream inn;
     inn.open(filename.c_str());
 
-    if (inn.is_open())
+    // read input as datapoints
+    if (true)
     {
-        int n;
-        //Vertex vertex;
-        Vector3d vector;
-        inn >> n;
-        mVertices.reserve(n);
-        for (int i=0; i<n; i++) {
-            //inn >> vertex.mPosition.x >> vertex.mPosition.y >> vertex.mPosition.z;
-            inn >> vector.x >> vector.y >> vector.z;
-            //mVertices.push_back(vertex);
+        if (inn.is_open())
+        {
+            int n;
+            //Vertex vertex;
+            Vector3d vector;
+            inn >> n;
+            mVertices.reserve(n);
+
+            // the first point as a size ref
+            inn >> vector.x >> vector.z >> vector.y;
+            maxX = vector.x; minX = vector.x;
+            maxY = vector.y; minY = vector.y;
+            maxZ = vector.z; minZ = vector.z;
             mDatapoints.push_back(vector);
 
-            if (i==0) // making sure to use real data for max/min
-            {
-                maxX = vector.x; minX = vector.x;
-                maxY = vector.y; minY = vector.y;
-                maxZ = vector.z; minZ = vector.z;
+            for (int i=1; i<n; i++) {
+                inn >> vector.x >> vector.z >> vector.y;
+                mDatapoints.push_back(vector);
+
+                // store max/min
+                if (vector.x > maxX)
+                    maxX = vector.x;
+                else if (vector.x < minX)
+                    minX = vector.x;
+                if (vector.y > maxY)
+                    maxY = vector.y;
+                else if (vector.y < minY)
+                    minY = vector.y;
+                if (vector.z > maxZ)
+                    maxZ = vector.z;
+                else if (vector.z < minZ)
+                    minZ = vector.z;
             }
-
-            // store max/min
-            if (vector.x > maxX)
-                maxX = vector.x;
-            if (vector.x < minX)
-                minX = vector.x;
-            if (vector.y > maxY)
-                maxY = vector.y;
-            if (vector.y < minY)
-                minY = vector.y;
-            if (vector.z > maxZ)
-                maxZ = vector.z;
-            if (vector.z < minZ)
-                minZ = vector.z;
+            inn.close();
         }
-        inn.close();
+
+        // get sizes
+        // how big is the data? (meters?)
+        gridRadiusX = maxX-minX;
+        float widthY = maxY-minY;
+        gridRadiusZ = maxZ-minZ;
+
+        qDebug() << "width x,y,z: " << gridRadiusX <<", "<< widthY <<", "<<gridRadiusZ;
+        // change positions to fit desired size (and place)
+        float shiftX = -(minX +(gridRadiusX/2));
+        float shiftY = -(minY +(widthY/2));
+        float shiftZ = -(minZ +(gridRadiusZ/2));
+        //float centerX = minX +((maxX-minX)/2);
+        for (int i = 0; i < mDatapoints.size(); i++)
+        {
+            mDatapoints[i].x += shiftX;
+            mDatapoints[i].y += shiftY;
+            mDatapoints[i].z += shiftZ;
+            //mVertices[i].mPosition.x = mVertices[i].mPosition.x - centerX;
+        }
     }
 
-    /*
-    // change positions to fit desired size (and place)
-    float centerX = minX +((maxX-minX)/2);
-    float centerY = minY +((maxY-minY)/2);
-    float centerZ = minZ +((maxZ-minZ)/2);
-    for (int i = 0; i < mVertices.size(); i++)
+    // draw input
+    if (false)
     {
-        mVertices[i].mPosition.x = mVertices[i].mPosition.x - centerX;
-        mVertices[i].mPosition.y = mVertices[i].mPosition.y - centerY;
-        mVertices[i].mPosition.z = mVertices[i].mPosition.z - centerZ;
+        if (inn.is_open())
+        {
+            int n;
+            Vertex vertex;
+            inn >> n;
+            n = 5000; // setting a lower amount of points to read
+            mVertices.reserve(n);
+
+            // the first point as a size ref
+            inn >> vertex.mPosition.x >> vertex.mPosition.y >> vertex.mPosition.z;
+            maxX = vertex.mPosition.x; minX = vertex.mPosition.x;
+            maxY = vertex.mPosition.y; minY = vertex.mPosition.y;
+            maxZ = vertex.mPosition.z; minZ = vertex.mPosition.z;
+            mVertices.push_back(vertex);
+
+            for (int i=1; i<n; i++) {
+                inn >> vertex.mPosition.x >> vertex.mPosition.z >> vertex.mPosition.y;
+                mVertices.push_back(vertex);
+
+                // store max/min
+                if (vertex.mPosition.x > maxX)
+                    maxX = vertex.mPosition.x;
+                else if (vertex.mPosition.x < minX)
+                    minX = vertex.mPosition.x;
+                if (vertex.mPosition.y > maxY)
+                    maxY = vertex.mPosition.y;
+                else if (vertex.mPosition.y < minY)
+                    minY = vertex.mPosition.y;
+                if (vertex.mPosition.z > maxZ)
+                    maxZ = vertex.mPosition.z;
+                else if (vertex.mPosition.z < minZ)
+                    minZ = vertex.mPosition.z;
+            }
+            inn.close();
+        }
+
+        // how big is the data? (meters?)
+        float widthX = maxX-minX;
+        float widthY = maxY-minY;
+        float widthZ = maxZ-minZ;
+
+        qDebug() << "width x,y,z: " << widthX<<", "<<widthY<<", "<<widthZ;
+        // change positions to fit desired size (and place)
+        float shiftX = -(minX +(widthX/2));
+        float shiftY = -(minY +(widthY/2));
+        float shiftZ = -(minZ +(widthZ/2));
+        //float centerX = minX +((maxX-minX)/2);
+        for (int i = 0; i < mVertices.size(); i++)
+        {
+            mVertices[i].mPosition.x += shiftX;
+            mVertices[i].mPosition.y += shiftY;
+            mVertices[i].mPosition.z += shiftZ;
+            //mVertices[i].mPosition.x = mVertices[i].mPosition.x - centerX;
+        }
+
+        // make indices
+        for (int i = 0; i < mVertices.size(); i++)
+        {
+            mIndices.push_back(i);
+        }
     }
-    */
 
-    //    // make indices
-    //    for (int i = 0; i < mVertices.size(); i++)
-    //    {
-    //        mIndices.push_back(i);
-    //    }
-
-
-
-
-
-    makeGrid();
-    setNeighbours();
-    giveTrianglesNormals();
 }
 
 // makes the grid, but hight on 0 still
 void TriangleSurface::makeGrid()
 {
-    float maxX = radius;
-    float minX = -radius;
-    float maxZ = radius;
-    float minZ = -radius;
-    int subdiv = radius*2;
+//    float maxX = gridRadiusX;
+//    float minX = -4;//-gridRadiusX;
+//    float maxZ = gridRadiusZ;
+//    float minZ = -4;//-gridRadiusZ;
+//    int subdivX = 10;
+//    int subdivZ = 10;
 
-    float spacingX = (maxX - minX)/subdiv; // (maxX - minX) = distanceX
-    float spacingZ = (maxZ - minZ)/subdiv;
+    float width = gridRadiusX;
+    int subdivisions = 75;
+    float min = -(width/2);
+    float spacing = width/subdivisions;
 
-    for (int i = 0; i <= subdiv; i++)
+    for (int i = 0; i <= subdivisions; i++)
     {
-        for (int j = 0; j <= subdiv; j++)
+        for (int j = 0; j <= subdivisions; j++)
         {
-            mVertices.push_back(Vertex(Vector3d(minX+(i*spacingX), 0, minZ+(j*spacingZ))));
+            mVertices.push_back(Vertex(Vector3d(min+(i*spacing), 0, min+(j*spacing))));
         }
     }
 
     // make indices
     // each loop is a square
-    for (int i = 0; i <= (subdiv)*(subdiv)+(subdiv-2); i++)
+    for (int i = 0; i <= (subdivisions)*(subdivisions)+(subdivisions-2); i++)
     {
-        if ((i+1)%(subdiv+1) != 0)
+        if ((i+1)%(subdivisions+1) != 0)
         {
             mIndices.push_back(i);
             mIndices.push_back(i+1);
-            mIndices.push_back(i+subdiv+1);
+            mIndices.push_back(i+subdivisions+1);
 
             mIndices.push_back(i+1);
-            mIndices.push_back(i+subdiv+2);
-            mIndices.push_back(i+subdiv+1);
+            mIndices.push_back(i+subdivisions+2);
+            mIndices.push_back(i+subdivisions+1);
         }
     }
 
     //setNeighbours();
 
-    //    // randomize heights
-    //    for (int i = 0; i < mVertices.size(); i++)
-    //    {
-    //        mVertices[i].mPosition.setY(std::rand()%3);
-    //    }
-
     // set height based on datapoints
-    float vertexRadius = .5f;
+    float vertexRadius = spacing/2;
     int points = 0;
     float height = 0;
+
+    // for each vertex in grid
     for (int i = 0; i < mVertices.size(); i++)
     {
+        qDebug() << "progress: " << i+1 << " / " << mVertices.size();
         points = 0;
         height = 0;
+
+        // for each datapoint...
         for (int j = 0; j < mDatapoints.size(); j++)
         {
             // if datapoint is within radius of vertex
@@ -184,6 +249,7 @@ void TriangleSurface::makeGrid()
                 j--;
             }
         }
+
         if (points > 0)
             height = height/points;
         mVertices[i].mPosition.y = height;
@@ -301,36 +367,26 @@ void TriangleSurface::init(GLint shader)
     glEnableVertexAttribArray(2);
 
 
-
-
     // element buffer object
     glGenBuffers(1, &mEBO);
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, mEBO );
     glBufferData( GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof( GLuint ), &mIndices[0], GL_STATIC_DRAW );
-    //qDebug() << mIndices.size();
 
     glBindVertexArray(0);
 }
 
 void TriangleSurface::draw(GLint PMatrixUniform, GLint VMatrixUniform, Camera* currentCamera, VisualObject* lightSource)
 {
-
-    //    // for player
-    //    mVelocity = mVelocity/1.09f;
-    //    mMatrix[{0,3}] = mMatrix[{0,3}] + mVelocity.x;
-    //    mMatrix[{1,3}] = mMatrix[{1,3}] + mVelocity.y;
-    //    mMatrix[{2,3}] = mMatrix[{2,3}] + mVelocity.z;
-
-
     if(mShader)
     {
         mShader->use(PMatrixUniform, VMatrixUniform, currentCamera, lightSource);
     }
-    //mVertices[1].print();
+
+
     glBindVertexArray( mVAO );
     glUniformMatrix4fv( mMatrixUniform, 1, GL_TRUE, mMatrix.constData());
 
-    glPointSize(10.f);
+    //glPointSize(10.f);
     //glDrawElements(GL_POINTS, mIndices.size(),GL_UNSIGNED_INT, nullptr);
     glDrawElements(GL_TRIANGLES, mIndices.size(),GL_UNSIGNED_INT, nullptr);
 }

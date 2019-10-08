@@ -34,7 +34,10 @@ public:
     // VisSim
     std::vector<GLint> mNeighbour;
     std::vector<Vector3d> mDatapoints;
-    float radius{3};
+    //float radius{3};
+
+    float gridRadiusX{0};
+    float gridRadiusZ{0};
 
     void makeGrid();
     void setNeighbours();

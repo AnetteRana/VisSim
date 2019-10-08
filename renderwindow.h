@@ -51,9 +51,11 @@ public:
 
     // VisSim
     InteractiveObject* theball{nullptr};
+    std::vector<InteractiveObject*> balls;
     TriangleSurface* newGround{nullptr};
     bool isSimulating{false};
     void toggleSimulation();
+    float cameraRadius{100};
 
 private slots:
     void render();
@@ -63,7 +65,8 @@ private:
     void init();
     GLfloat myRuntime{0};
     std::vector<Camera*> mCamera{};
-    uint currentCamera{0};
+    uint currentCamera{1};
+
 
     // vector to hold pointers to all the objects
     std::vector<VisualObject*> mObjectsScene3;
