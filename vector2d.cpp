@@ -96,19 +96,19 @@ Vector3d Vector2d::barycentricCoordinates(const Vector2d& p1, const Vector2d& p2
 
 Vector2d Vector2d::baryNeighbour(const Vector2d& p1, const Vector2d& p2, const Vector2d& p3)
 {
-    Vector2d neighbouringPoing; // to retur
+    Vector2d neighbouringPoint; // to retur
 
     // make point on line
-    neighbouringPoing = (p2*0.5f)+(p3*0.5f);
+    neighbouringPoint = (p2*0.5f)+(p3*0.5f);
     // push point over the line
     float t = 1.5f;
-    neighbouringPoing = (p1*(1-t))+(neighbouringPoing*t);
+    neighbouringPoint = (p1*(1-t))+(neighbouringPoint*t);
 
 
-    return neighbouringPoing;
+    return neighbouringPoint;
 }
 
 void Vector2d::print()
 {
-        qDebug() << x << " " << y;
+    qDebug() << x << " " << y;
 }

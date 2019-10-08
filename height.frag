@@ -24,10 +24,10 @@ void main() {
 
     //vec4 shore = diffuse * lightColor * vec4(0.9, 0.8, 0.6, 1) * height/2;
     vec4 water = vec4(0, 0, .5f, 1) * (height+150)/100;//
-    vec4 shore = vec4(0.9, 0.8, 0.6, 1) ;
+    vec4 shore = vec4(0.9, 0.8, 0.6, 1) * (height+100)/100 ;
     vec4 grass = vec4(.2, .7, .2, 1) * (height+50)/100;
 
-    if (height < 0.2) // water
+    if (height < -25.f) // water
     {
         result = water;//diffuse * lightColor * groundColor + height;
     }

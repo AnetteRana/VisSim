@@ -185,12 +185,12 @@ void TriangleSurface::readFile(std::string filename)
 // makes the grid, but hight on 0 still
 void TriangleSurface::makeGrid()
 {
-//    float maxX = gridRadiusX;
-//    float minX = -4;//-gridRadiusX;
-//    float maxZ = gridRadiusZ;
-//    float minZ = -4;//-gridRadiusZ;
-//    int subdivX = 10;
-//    int subdivZ = 10;
+    //    float maxX = gridRadiusX;
+    //    float minX = -4;//-gridRadiusX;
+    //    float maxZ = gridRadiusZ;
+    //    float minZ = -4;//-gridRadiusZ;
+    //    int subdivX = 10;
+    //    int subdivZ = 10;
 
     float width = gridRadiusX;
     int subdivisions = 75;
@@ -231,7 +231,7 @@ void TriangleSurface::makeGrid()
     // for each vertex in grid
     for (int i = 0; i < mVertices.size(); i++)
     {
-        qDebug() << "progress: " << i+1 << " / " << mVertices.size();
+        //qDebug() << "progress: " << i+1 << " / " << mVertices.size();
         points = 0;
         height = 0;
 
@@ -463,7 +463,6 @@ bool TriangleSurface::giveSurfaceTriangleToBall(InteractiveObject* ball)
 
     if (triangleID < 0)
     {
-        qDebug() << "Outide of bounds";
         return false;
     }
     else

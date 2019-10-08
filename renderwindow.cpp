@@ -119,15 +119,12 @@ void RenderWindow::init()
     //*********************** Make objects here
     //*****************************************
 
-    //*******************************
-    //*********************** Scene 3
-    //*******************************
-
     // axis
     mObjectsScene3.push_back(new Axis());
     mObjectsScene3.back()->mShader = mShaderProgram;
 
     // trekantbakke
+    //newGround = (new TriangleSurface(std::string("../VisSim/meshes/testBakke.txt")));
     newGround = (new TriangleSurface(std::string("../VisSim/meshes/18896Points.txt")));
     newGround->mShader = mShaderProgramHeight;
     mObjectsScene3.push_back(newGround);
@@ -135,7 +132,7 @@ void RenderWindow::init()
     // ball
     theball = (new InteractiveObject(2, this));
     theball->setVelocity(Vector3d(0,-50,0));
-    theball->setPosition(Vector3d(-200.f, 100, 2.1f));
+    theball->setPosition(Vector3d(-150.f, 100, 2.1f));
     theball->mMatrix.translate(theball->initialPosition);
     theball->setSize(1.f);
     theball->mShader = mShaderProgramPhong;

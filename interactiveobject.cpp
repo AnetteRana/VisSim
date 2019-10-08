@@ -21,16 +21,10 @@ void InteractiveObject::move()
     // if out of bounds
     if (isOnGround != true)
     {
-        if (abs(position.x) > mGround->gridRadiusX)
+        if (abs(position.x) > mGround->gridRadiusX/2)
             velocity.x = -velocity.x;
-        if (abs(position.z) > mGround->gridRadiusZ)
+        if (abs(position.z) > mGround->gridRadiusX/2)
             velocity.z = -velocity.z;
-
-        //            if (mOwner->isSimulating)
-        //            {
-        //                mOwner->toggleSimulation();
-        //                infoPrinting();
-        //            }
     }
 
     // get the barysentric coordinates of the ball on the plane (2d)
