@@ -56,130 +56,61 @@ void TriangleSurface::readFile(std::string filename)
     inn.open(filename.c_str());
 
     // read input as datapoints
-    if (true)
+    if (inn.is_open())
     {
-        if (inn.is_open())
-        {
-            int n;
-            //Vertex vertex;
-            Vector3d vector;
-            inn >> n;
-            mVertices.reserve(n);
+        int n;
+        //Vertex vertex;
+        Vector3d vector;
+        inn >> n;
+        mVertices.reserve(n);
 
-            // the first point as a size ref
+        // the first point as a size ref
+        inn >> vector.x >> vector.z >> vector.y;
+        maxX = vector.x; minX = vector.x;
+        maxY = vector.y; minY = vector.y;
+        maxZ = vector.z; minZ = vector.z;
+        mDatapoints.push_back(vector);
+
+        for (int i=1; i<n; i++) {
             inn >> vector.x >> vector.z >> vector.y;
-            maxX = vector.x; minX = vector.x;
-            maxY = vector.y; minY = vector.y;
-            maxZ = vector.z; minZ = vector.z;
             mDatapoints.push_back(vector);
 
-            for (int i=1; i<n; i++) {
-                inn >> vector.x >> vector.z >> vector.y;
-                mDatapoints.push_back(vector);
-
-                // store max/min
-                if (vector.x > maxX)
-                    maxX = vector.x;
-                else if (vector.x < minX)
-                    minX = vector.x;
-                if (vector.y > maxY)
-                    maxY = vector.y;
-                else if (vector.y < minY)
-                    minY = vector.y;
-                if (vector.z > maxZ)
-                    maxZ = vector.z;
-                else if (vector.z < minZ)
-                    minZ = vector.z;
-            }
-            inn.close();
+            // store max/min
+            if (vector.x > maxX)
+                maxX = vector.x;
+            else if (vector.x < minX)
+                minX = vector.x;
+            if (vector.y > maxY)
+                maxY = vector.y;
+            else if (vector.y < minY)
+                minY = vector.y;
+            if (vector.z > maxZ)
+                maxZ = vector.z;
+            else if (vector.z < minZ)
+                minZ = vector.z;
         }
-
-        // get sizes
-        // how big is the data? (meters?)
-        gridRadiusX = maxX-minX;
-        float widthY = maxY-minY;
-        gridRadiusZ = maxZ-minZ;
-
-        qDebug() << "width x,y,z: " << gridRadiusX <<", "<< widthY <<", "<<gridRadiusZ;
-        // change positions to fit desired size (and place)
-        float shiftX = -(minX +(gridRadiusX/2));
-        float shiftY = -(minY +(widthY/2));
-        float shiftZ = -(minZ +(gridRadiusZ/2));
-        //float centerX = minX +((maxX-minX)/2);
-        for (int i = 0; i < mDatapoints.size(); i++)
-        {
-            mDatapoints[i].x += shiftX;
-            mDatapoints[i].y += shiftY;
-            mDatapoints[i].z += shiftZ;
-            //mVertices[i].mPosition.x = mVertices[i].mPosition.x - centerX;
-        }
+        inn.close();
     }
 
-    // draw input
-    if (false)
+    // get sizes
+    // how big is the data? (meters?)
+    gridRadiusX = maxX-minX;
+    float widthY = maxY-minY;
+    gridRadiusZ = maxZ-minZ;
+
+    qDebug() << "width x,y,z: " << gridRadiusX <<", "<< widthY <<", "<<gridRadiusZ;
+    // change positions to fit desired size (and place)
+    float shiftX = -(minX +(gridRadiusX/2));
+    float shiftY = -(minY +(widthY/2));
+    float shiftZ = -(minZ +(gridRadiusZ/2));
+    //float centerX = minX +((maxX-minX)/2);
+    for (int i = 0; i < mDatapoints.size(); i++)
     {
-        if (inn.is_open())
-        {
-            int n;
-            Vertex vertex;
-            inn >> n;
-            n = 5000; // setting a lower amount of points to read
-            mVertices.reserve(n);
-
-            // the first point as a size ref
-            inn >> vertex.mPosition.x >> vertex.mPosition.y >> vertex.mPosition.z;
-            maxX = vertex.mPosition.x; minX = vertex.mPosition.x;
-            maxY = vertex.mPosition.y; minY = vertex.mPosition.y;
-            maxZ = vertex.mPosition.z; minZ = vertex.mPosition.z;
-            mVertices.push_back(vertex);
-
-            for (int i=1; i<n; i++) {
-                inn >> vertex.mPosition.x >> vertex.mPosition.z >> vertex.mPosition.y;
-                mVertices.push_back(vertex);
-
-                // store max/min
-                if (vertex.mPosition.x > maxX)
-                    maxX = vertex.mPosition.x;
-                else if (vertex.mPosition.x < minX)
-                    minX = vertex.mPosition.x;
-                if (vertex.mPosition.y > maxY)
-                    maxY = vertex.mPosition.y;
-                else if (vertex.mPosition.y < minY)
-                    minY = vertex.mPosition.y;
-                if (vertex.mPosition.z > maxZ)
-                    maxZ = vertex.mPosition.z;
-                else if (vertex.mPosition.z < minZ)
-                    minZ = vertex.mPosition.z;
-            }
-            inn.close();
-        }
-
-        // how big is the data? (meters?)
-        float widthX = maxX-minX;
-        float widthY = maxY-minY;
-        float widthZ = maxZ-minZ;
-
-        qDebug() << "width x,y,z: " << widthX<<", "<<widthY<<", "<<widthZ;
-        // change positions to fit desired size (and place)
-        float shiftX = -(minX +(widthX/2));
-        float shiftY = -(minY +(widthY/2));
-        float shiftZ = -(minZ +(widthZ/2));
-        //float centerX = minX +((maxX-minX)/2);
-        for (int i = 0; i < mVertices.size(); i++)
-        {
-            mVertices[i].mPosition.x += shiftX;
-            mVertices[i].mPosition.y += shiftY;
-            mVertices[i].mPosition.z += shiftZ;
-            //mVertices[i].mPosition.x = mVertices[i].mPosition.x - centerX;
-        }
-
-        // make indices
-        for (int i = 0; i < mVertices.size(); i++)
-        {
-            mIndices.push_back(i);
-        }
+        mDatapoints[i].x += shiftX;
+        mDatapoints[i].y += shiftY;
+        mDatapoints[i].z += shiftZ;
+        //mVertices[i].mPosition.x = mVertices[i].mPosition.x - centerX;
     }
-
 }
 
 // makes the grid, but hight on 0 still
